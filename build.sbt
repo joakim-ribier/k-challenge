@@ -55,8 +55,8 @@ docsMap := Map(file("src/main/scala/io/komoot/server/routes/specs") -> file("res
 // coverage
 ThisBuild / coverageEnabled := true
 ThisBuild / coverageExcludedPackages := "<empty>;Reverse.*;aws\\.*;.*BuildInfo.*;.*RoutesPrefix.*;.*mock.*;.*Main.*;.*AppServer.*"
-ThisBuild / coverageMinimumStmtTotal := 100
-ThisBuild / coverageFailOnMinimum := false
+ThisBuild / coverageMinimumStmtTotal := 60
+ThisBuild / coverageFailOnMinimum := true
 
 // scalafmt
 scalafmtOnCompile := false // Use "Format on save" instead https://scalameta.org/scalafmt/docs/installation.html#format-on-save
