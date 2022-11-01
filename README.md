@@ -69,6 +69,8 @@ I used [circe](https://circe.github.io/circe/) library to work with Json data ty
 
 To load configuration files, I used [pureconfig](https://github.com/pureconfig/pureconfig), there is no more simple way!
 
+The project is built with the first little integration of the Github workflows [Scala CI](https://github.com/joakim-ribier/komoot-challenge/actions) on the branch `#task/add-github-workflows-action`.
+
 ## Documentation
 
 I used [Literator](https://github.com/laughedelic/literator) sbt plugin to generate the API specification.
