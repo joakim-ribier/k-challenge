@@ -7,7 +7,7 @@ import io.komoot.models.NewUser
 import io.komoot.models.cache.{NewUserData, NewUserInfo}
 import io.komoot.services.SignupNotifyService
 
-trait ModelSpec {
+trait ModelHelpers {
 
   def buildNewUserInfo(newUser: NewUser) = NewUserInfo(newUser, true, LocalDateTime.now())
 

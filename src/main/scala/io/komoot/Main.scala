@@ -35,16 +35,14 @@ object Main extends IOApp.Simple {
       snsClient = SnsClient.builder().region(Region.of(config.komoot.region)).credentialsProvider(
         StaticCredentialsProvider.create(awsCreds)
       ).build()
-      _ <- Resource.eval(new SNSAwsService(snsClient).subscribe(
-        config.komoot.sns,
-        config.snsEndpointToReceiveNotification
-      ))
+      snsAwsService = new SNSAwsService(snsClient, httpClient)
+      _ <- Resource.eval(snsAwsService.subscribe(config.komoot.sns, config.snsEndpointToReceiveNotification))
 
       newUserCacheService <- Resource.eval(CaffeineCache[IO, String, NewUserData]).map(new NewUserCacheService(_))
       pushNotificationHttpService = new PushNotificationHttpService(httpClient, config.komoot)
       signupNotifyService = new SignupNotifyService(config, newUserCacheService, pushNotificationHttpService)
 
-      appServer = new AppServer(config.http, signupNotifyService, httpClient, newUserCacheService)
+      appServer = new AppServer(config.http, signupNotifyService, newUserCacheService, snsAwsService)
       _ <- appServer.start()
     } yield ()).useForever
   }

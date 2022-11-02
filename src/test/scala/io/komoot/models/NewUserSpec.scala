@@ -2,9 +2,9 @@ package io.komoot.models
 
 import io.circe.parser.parse
 import io.circe.syntax.EncoderOps
-import io.komoot.HelpersSpec
+import io.komoot.AppHelpers
 
-class NewUserSpec extends HelpersSpec {
+class NewUserSpec extends AppHelpers {
 
   "NewUserSpec" must {
 

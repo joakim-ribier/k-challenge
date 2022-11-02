@@ -1,10 +1,10 @@
 package io.komoot.models
 
 import io.circe.parser.parse
-import io.komoot.HelpersSpec
+import io.komoot.AppHelpers
 import io.komoot.models.aws.SnsMessage
 
-class SnsMessageSpec extends HelpersSpec {
+class SnsMessageSpec extends AppHelpers {
 
   "SnsMessageSpec" must {
 

@@ -12,13 +12,13 @@ import org.http4s.{HttpRoutes, Response}
 import org.typelevel.log4cats.slf4j.Slf4jFactory
 
 class HttpStatusRoute(newUserCacheService: NewUserCacheService)(implicit loggerFactory: Slf4jFactory[IO])
-    extends Http4sDsl[IO] with HttpStatusRouteSpec {
+    extends Http4sDsl[IO] with HttpRoute with HttpStatusRouteSpec {
 
   implicit def anyWithEncoderToJsValue[T](field: T)(implicit enc: Encoder[T]): Json = enc(field)
 
   private lazy val logger = loggerFactory.getLogger
 
-  val routes = HttpRoutes.of[IO] {
+  override def routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "api" / "status" => status()
     case GET -> Root / "api" / "status" / "cache" => cache()
   }

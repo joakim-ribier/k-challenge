@@ -3,19 +3,14 @@ package io.komoot.services
 import java.time.LocalDateTime
 
 import cats.effect.IO
-import cats.effect.unsafe.IORuntime
 import cats.implicits.catsSyntaxApplicativeId
-import io.komoot.HelpersSpec
 import io.komoot.config.{Config, KomootConfig}
 import io.komoot.models.cache.NewUserData
 import io.komoot.models.{NewUser, UserNotification}
 import io.komoot.services.http.PushNotificationHttpService
-import org.typelevel.log4cats.slf4j.Slf4jFactory
-import org.typelevel.log4cats.{LoggerName, SelfAwareStructuredLogger}
+import io.komoot.{EnvHelpers, AppHelpers}
 
-class SignupNotifyServiceSpec extends HelpersSpec {
-
-  implicit val runtime: IORuntime = cats.effect.unsafe.IORuntime.global
+class SignupNotifyServiceSpec extends AppHelpers with EnvHelpers {
 
   "SignupNotifyService" when {
 
@@ -24,11 +19,6 @@ class SignupNotifyServiceSpec extends HelpersSpec {
     "notify" must {
 
       "do nothing if user already exists" in {
-        implicit val loggerFactory: Slf4jFactory[IO] = mock[Slf4jFactory[IO]]
-        val logger = mock[SelfAwareStructuredLogger[IO]]
-        loggerFactory.getLogger(*[LoggerName]).returns(logger)
-        logger.info(*[String]).returns(IO.unit)
-
         val newUserCacheService = mock[NewUserCacheService]
         newUserCacheService.getCache().returns(IO.pure(NewUserData(List(marcus))))
 
@@ -42,13 +32,6 @@ class SignupNotifyServiceSpec extends HelpersSpec {
       }
 
       "push notification for new signup user" in {
-        implicit val loggerFactory: Slf4jFactory[IO] = mock[Slf4jFactory[IO]]
-
-        val logger = mock[SelfAwareStructuredLogger[IO]]
-        logger.info(*[String]).returns(IO.unit)
-
-        loggerFactory.getLogger(*[LoggerName]).returns(logger)
-
         val newUserCacheService = mock[NewUserCacheService]
         newUserCacheService.getCache().returns(IO.pure(NewUserData(List(lydia))))
         newUserCacheService.update(*[NewUser], *[Boolean], *[LocalDateTime]).returns(IO.unit)

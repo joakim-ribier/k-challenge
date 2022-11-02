@@ -2,9 +2,9 @@ package io.komoot.models
 
 import io.circe.parser.parse
 import io.circe.syntax.EncoderOps
-import io.komoot.HelpersSpec
+import io.komoot.AppHelpers
 
-class UserNotificationSpec extends HelpersSpec {
+class UserNotificationSpec extends AppHelpers {
 
   "UserNotificationSpec" must {
 
