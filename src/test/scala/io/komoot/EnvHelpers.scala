@@ -15,7 +15,7 @@ trait EnvHelpers {
 
   implicit val runtime: IORuntime = cats.effect.unsafe.IORuntime.global
 
-  def run(service: HttpRoute, request: Request[IO]): (Status, Option[Json]) = {
+  def run(service: HttpRoute[IO], request: Request[IO]): (Status, Option[Json]) = {
     implicit val json = jsonOf[IO, Json]
 
     val response = service.routes.run(request).value.unsafeRunSync().get

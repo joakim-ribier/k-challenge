@@ -1,6 +1,8 @@
 package io.komoot.services.http
 
-import cats.effect.IO
+import cats.effect.kernel.Concurrent
+import cats.implicits.toFunctorOps
+import cats.syntax.applicativeError._
 import io.circe.syntax.EncoderOps
 import io.komoot.HttpClientA
 import io.komoot.config.KomootConfig
@@ -11,15 +13,15 @@ import org.http4s.Uri.unsafeFromString
 import org.http4s.circe._
 import org.typelevel.log4cats.slf4j.Slf4jFactory
 
-class PushNotificationHttpService(
-  httpClient: HttpClientA,
+class PushNotificationHttpService[F[_]: Concurrent](
+  httpClient: HttpClientA[F],
   config: KomootConfig
-)(implicit loggerFactory: Slf4jFactory[IO]) {
+)(implicit loggerFactory: Slf4jFactory[F]) {
 
   private lazy val logger = loggerFactory.getLogger
 
-  def push(value: UserNotification): IO[Boolean] = {
-    val req = Request[IO](POST)
+  def push(value: UserNotification): F[Boolean] = {
+    val req = Request[F](POST)
       .withUri(unsafeFromString(config.api))
       .withEntity(value.asJson)
 

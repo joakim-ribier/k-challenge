@@ -22,13 +22,13 @@ object Main extends IOApp.Simple {
     lazy val logger = loggerFactory.getLogger
 
     (for {
-      config <- new ConfigLoader().load()
+      config <- new ConfigLoader[IO]().load()
       _ <- Resource.eval(logger.info(s"Starting application.\n\r$config"))
 
       httpClient <- BlazeClientBuilder[IO].resource.map(new HttpClientA(_))
 
       // aws
-      snsAwsService = new SNSAwsService(new SnsClientA(config), httpClient)
+      snsAwsService = new SNSAwsService(new SnsClientA[IO](config), httpClient)
       _ <- Resource.eval(snsAwsService.subscribe(config.komoot.sns, config.snsEndpointToReceiveNotification))
 
       newUserCacheService <- Resource.eval(CaffeineCache[IO, String, NewUserData]).map(new NewUserCacheService(_))

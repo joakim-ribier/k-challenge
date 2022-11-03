@@ -2,8 +2,8 @@ package io.komoot.services
 
 import java.time.LocalDateTime
 
-import cats.effect.IO
-import cats.implicits.catsSyntaxApplicativeId
+import cats.effect.kernel.Concurrent
+import cats.implicits.{catsSyntaxApplicativeId, toFlatMapOps, toFunctorOps}
 import io.komoot.config.Config
 import io.komoot.models.cache.NewUserData
 import io.komoot.models.{NewUser, UserNotification}
@@ -11,24 +11,24 @@ import io.komoot.services.SignupNotifyService.buildNotification
 import io.komoot.services.http.PushNotificationHttpService
 import org.typelevel.log4cats.slf4j.Slf4jFactory
 
-class SignupNotifyService(
+class SignupNotifyService[F[_]: Concurrent](
   config: Config,
-  newUserCacheService: NewUserCacheService,
-  pushNotificationHttpService: PushNotificationHttpService
-)(implicit loggerFactory: Slf4jFactory[IO]) {
+  newUserCacheService: NewUserCacheService[F],
+  pushNotificationHttpService: PushNotificationHttpService[F]
+)(implicit loggerFactory: Slf4jFactory[F]) {
 
   private lazy val logger = loggerFactory.getLogger
 
-  def notify(newUser: NewUser, receivedAt: LocalDateTime): IO[Unit] = {
+  def notify(newUser: NewUser, receivedAt: LocalDateTime): F[Unit] = {
 
-    def push(newUserData: NewUserData): IO[Unit] = {
+    def push(newUserData: NewUserData): F[Unit] = {
       val userNotification = buildNotification(config.sender, newUser, newUserData, config.nbRecentlyUsersMaxToKeep)
       for {
         _ <- logger.info(s"Notify user ${newUser.name}, that he is welcome to our platform.")
         notifySuccessful <- {
           if (config.komoot.enable) { // for local test to avoid spam komoot API
             pushNotificationHttpService.push(userNotification)
-          } else true.pure[IO]
+          } else true.pure[F]
         }
         _ <- {
           (if (notifySuccessful) {

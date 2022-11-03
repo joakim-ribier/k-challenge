@@ -1,6 +1,7 @@
 package io.komoot.aws
 
-import cats.effect.IO
+import cats.Applicative
+import cats.syntax.functor._
 import io.komoot.config.Config
 
 import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
@@ -8,10 +9,10 @@ import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsClient
 import software.amazon.awssdk.services.sns.model.{SubscribeRequest, SubscribeResponse}
 
-class SnsClientA(config: Config) {
+class SnsClientA[F[_]: Applicative](config: Config) {
 
-  lazy val client: IO[SnsClient] = {
-    IO.pure {
+  lazy val client: F[SnsClient] = {
+    Applicative[F].pure {
       val awsCreds = AwsBasicCredentials.create(config.aws.accessKeyId, config.aws.secretAccessKey)
       SnsClient.builder().region(Region.of(config.komoot.region)).credentialsProvider(
         StaticCredentialsProvider.create(awsCreds)
@@ -19,7 +20,7 @@ class SnsClientA(config: Config) {
     }
   }
 
-  def subscribe(request: SubscribeRequest): IO[SubscribeResponse] = {
+  def subscribe(request: SubscribeRequest): F[SubscribeResponse] = {
     client.map(_.subscribe(request))
   }
 }

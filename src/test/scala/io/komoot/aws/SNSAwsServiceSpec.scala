@@ -15,7 +15,7 @@ class SNSAwsServiceSpec extends AppHelpers with EnvHelpers {
     "confirmSubscribeURL" must {
 
       "gets url and returns result" in {
-        val httpClientA = mock[HttpClientA]
+        val httpClientA = mock[HttpClientA[IO]]
         httpClientA.successful(*[Request[IO]]).returns(true.pure[IO])
 
         val service = new SNSAwsService(null, httpClientA)
@@ -26,7 +26,7 @@ class SNSAwsServiceSpec extends AppHelpers with EnvHelpers {
       }
 
       "returns 'false' if an error occurred!" in {
-        val httpClientA = mock[HttpClientA]
+        val httpClientA = mock[HttpClientA[IO]]
         httpClientA.successful(*[Request[IO]]).returns(IO.raiseError(new Throwable("error test")))
 
         val service = new SNSAwsService(null, httpClientA)
@@ -46,7 +46,7 @@ class SNSAwsServiceSpec extends AppHelpers with EnvHelpers {
       }
 
       "returns 'true' if the client is connected to the ARN:SNS" in {
-        val snsClient = mock[SnsClientA]
+        val snsClient = mock[SnsClientA[IO]]
         snsClient.subscribe(*[SubscribeRequest]).returns(buildResponse(200))
 
         val service = new SNSAwsService(snsClient, null)
@@ -64,7 +64,7 @@ class SNSAwsServiceSpec extends AppHelpers with EnvHelpers {
       }
 
       "returns 'false' if the client fails to connect to the ARN:SNS" in {
-        val snsClient = mock[SnsClientA]
+        val snsClient = mock[SnsClientA[IO]]
         snsClient.subscribe(*[SubscribeRequest]).returns(buildResponse(409))
 
         val service = new SNSAwsService(snsClient, null)

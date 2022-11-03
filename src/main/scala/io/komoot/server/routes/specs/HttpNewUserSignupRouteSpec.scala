@@ -1,9 +1,8 @@
 package io.komoot.server.routes.specs
 
-import cats.effect.IO
 import org.http4s.{Request, Response}
 
-trait HttpNewUserSignupRouteSpec {
+trait HttpNewUserSignupRouteSpec[F[_]] {
 
   /*
     ____
@@ -32,7 +31,7 @@ trait HttpNewUserSignupRouteSpec {
     }
     ```
    */
-  def notifyNewUserSignup(req: Request[IO]): IO[Response[IO]]
+  def notifyNewUserSignup(req: Request[F]): F[Response[F]]
 
   /*
     ____
@@ -67,5 +66,5 @@ trait HttpNewUserSignupRouteSpec {
     }
     ```
    */
-  def notifyNewUserSignupFromAwsSNS(req: Request[IO]): IO[Response[IO]]
+  def notifyNewUserSignupFromAwsSNS(req: Request[F]): F[Response[F]]
 }

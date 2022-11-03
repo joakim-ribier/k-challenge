@@ -1,9 +1,8 @@
 package io.komoot.server.routes
 
-import cats.effect.IO
 import org.http4s.HttpRoutes
 
-trait HttpRoute {
+trait HttpRoute[F[_]] {
 
-  def routes: HttpRoutes[IO]
+  def routes: HttpRoutes[F]
 }
