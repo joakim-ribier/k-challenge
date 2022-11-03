@@ -54,8 +54,8 @@ docsMap := Map(file("src/main/scala/io/komoot/server/routes/specs") -> file("res
 
 // coverage
 ThisBuild / coverageEnabled := true
-ThisBuild / coverageExcludedPackages := "<empty>;Reverse.*;aws\\.*;.*BuildInfo.*;.*RoutesPrefix.*;.*mock.*;.*Main.*;.*AppServer.*;.*AppSnsClient.*"
-ThisBuild / coverageMinimumStmtTotal := 60
+ThisBuild / coverageExcludedPackages := "<empty>;Reverse.*;.*BuildInfo.*;.*Main.*;.*AppServer.*;.*SnsClientA.*;.*HttpClientA.*"
+ThisBuild / coverageMinimumStmtTotal := 95
 ThisBuild / coverageFailOnMinimum := true
 
 // scalafmt

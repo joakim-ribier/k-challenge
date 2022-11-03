@@ -20,9 +20,9 @@ class HttpNewUserSignupTestSpec extends AppHelpers with EnvHelpers {
 
   "HttpNewUserSignup" when {
 
-    "call ~/api/new-user-signup" must {
+    "~/api/new-user-signup" must {
 
-      "post a new signup user" in {
+      "posts a new signup user" in {
         val request: Request[IO] =
           Request(POST, unsafeFromString("/api/new-user-signup")).withEntity(marcus.newUser.asJson)
 
@@ -39,9 +39,9 @@ class HttpNewUserSignupTestSpec extends AppHelpers with EnvHelpers {
       }
     }
 
-    "call ~/api/aws-sns/new-user-signup" must {
+    "~/api/aws-sns/new-user-signup" must {
 
-      "post a new signup user from the ARN:SNS 'Message'" in {
+      "posts a new signup user from the ARN:SNS 'Message'" in {
         val request: Request[IO] =
           Request(POST, unsafeFromString("/api/aws-sns/new-user-signup")).withEntity(
             Json.obj("Message" -> Json.fromString(marcus.newUser.asJson.noSpaces))
@@ -59,7 +59,7 @@ class HttpNewUserSignupTestSpec extends AppHelpers with EnvHelpers {
         signupNotifyService.notify(marcus.newUser, *[LocalDateTime]).wasCalled(once)
       }
 
-      "confirm the 'SubscribeURL' for the very first message from the ARN:SNS" in {
+      "confirms the 'SubscribeURL' for the very first message from the ARN:SNS" in {
         val request: Request[IO] =
           Request(POST, unsafeFromString("/api/aws-sns/new-user-signup")).withEntity(
             Json.obj(
@@ -78,6 +78,19 @@ class HttpNewUserSignupTestSpec extends AppHelpers with EnvHelpers {
         status mustBe NoContent
 
         snsAwsService.confirmSubscribeURL("{url to confirm}").wasCalled(once)
+      }
+
+      "does nothing if the message from ARN:SNS is not correct" in {
+        val request: Request[IO] =
+          Request(POST, unsafeFromString("/api/aws-sns/new-user-signup")).withEntity(
+            Json.obj("Message" -> Json.fromString("bad format message"))
+          )
+
+        val service = new HttpNewUserSignupRoute(null, null)
+
+        val (status, _) = run(service, request)
+
+        status mustBe NoContent
       }
     }
   }

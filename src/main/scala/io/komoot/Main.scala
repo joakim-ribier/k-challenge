@@ -25,7 +25,7 @@ object Main extends IOApp.Simple {
       config <- new ConfigLoader().load()
       _ <- Resource.eval(logger.info(s"Starting application.\n\r$config"))
 
-      httpClient <- BlazeClientBuilder[IO].resource
+      httpClient <- BlazeClientBuilder[IO].resource.map(new HttpClientA(_))
 
       // aws
       snsAwsService = new SNSAwsService(new SnsClientA(config), httpClient)

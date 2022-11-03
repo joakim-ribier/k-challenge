@@ -59,6 +59,31 @@ class SignupNotifyServiceSpec extends AppHelpers with EnvHelpers {
         logger.info(s"The notification has been sent.\n\r$userNotification").wasCalled(once)
         newUserCacheService.update(*[NewUser], true, now).wasCalled(once)
       }
+
+      "mocks push notification if the configuration is not enabled" in {
+        val newUserCacheService = mock[NewUserCacheService]
+        newUserCacheService.getCache().returns(IO.pure(NewUserData(List(lydia))))
+        newUserCacheService.update(*[NewUser], *[Boolean], *[LocalDateTime]).returns(IO.unit)
+
+        val service = new SignupNotifyService(
+          config.copy(komoot = KomootConfig("", "", false, "")),
+          newUserCacheService,
+          pushNotificationHttpService = null
+        )
+
+        val now = LocalDateTime.now()
+        service.notify(marcus.newUser, now).unsafeRunSync()
+
+        newUserCacheService.getCache().wasCalled(once)
+        logger.info(s"Notify user ${marcus.name}, that he is welcome to our platform.").wasCalled(once)
+        val userNotification = SignupNotifyService.buildNotification(
+          "test@komoot.io",
+          marcus.newUser,
+          NewUserData(List(lydia))
+        )
+        logger.info(s"The notification has been sent.\n\r$userNotification").wasCalled(once)
+        newUserCacheService.update(*[NewUser], true, now).wasCalled(once)
+      }
     }
 
     "build message" must {

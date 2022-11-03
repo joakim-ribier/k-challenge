@@ -28,8 +28,12 @@ trait EnvHelpers {
   // mock logger
   implicit val loggerFactory: Slf4jFactory[IO] = mock[Slf4jFactory[IO]]
   val logger = mock[SelfAwareStructuredLogger[IO]]
+
   loggerFactory.getLogger(*[LoggerName]).returns(logger)
+
+  logger.warn(*[String]).returns(IO.unit)
   logger.debug(*[String]).returns(IO.unit)
   logger.info(*[String]).returns(IO.unit)
   logger.error(*[String]).returns(IO.unit)
+  logger.error(*[scala.Throwable])(*[String]).returns(IO.unit)
 }

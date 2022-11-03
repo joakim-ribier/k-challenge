@@ -8,8 +8,7 @@ class SnsMessageSpec extends AppHelpers {
 
   "SnsMessageSpec" must {
 
-    "deserialize object with 'new user' message" in {
-
+    "deserializes object with 'new user' message" in {
       parse(
         """
           |{
@@ -19,7 +18,17 @@ class SnsMessageSpec extends AppHelpers {
       ).toOption.get.as[SnsMessage].toOption.get mustBe SnsMessage(maybeNewUser = Some(marcus.newUser), None)
     }
 
-    "deserialize object with 'subscribe url' message" in {
+    "deserializes object with bad 'new user' message" in {
+      parse(
+        """
+          |{
+          |  "Message" : "{\"createdAt\": \"2020-05-12T16:11:54.000\", \"name\": \"Marcus\", \"id\": 1}"
+          |}
+          |""".stripMargin
+      ).toOption.get.as[SnsMessage].toOption.get mustBe SnsMessage(None, None)
+    }
+
+    "deserializes object with 'subscribe url' message" in {
       parse(
         """
           |{

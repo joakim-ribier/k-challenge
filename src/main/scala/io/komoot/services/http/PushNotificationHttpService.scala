@@ -2,17 +2,17 @@ package io.komoot.services.http
 
 import cats.effect.IO
 import io.circe.syntax.EncoderOps
+import io.komoot.HttpClientA
 import io.komoot.config.KomootConfig
 import io.komoot.models.UserNotification
 import org.http4s.Method.POST
 import org.http4s.Request
 import org.http4s.Uri.unsafeFromString
 import org.http4s.circe._
-import org.http4s.client.Client
 import org.typelevel.log4cats.slf4j.Slf4jFactory
 
 class PushNotificationHttpService(
-  httpClient: Client[IO],
+  httpClient: HttpClientA,
   config: KomootConfig
 )(implicit loggerFactory: Slf4jFactory[IO]) {
 

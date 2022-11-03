@@ -1,15 +1,15 @@
 package io.komoot.aws
 
 import cats.effect.IO
+import io.komoot.HttpClientA
 import org.http4s.Method.GET
 import org.http4s.Request
 import org.http4s.Uri.unsafeFromString
-import org.http4s.client.Client
 import org.typelevel.log4cats.slf4j.Slf4jFactory
 
 import software.amazon.awssdk.services.sns.model.SubscribeRequest
 
-class SNSAwsService(snsClient: SnsClientA, httpClient: Client[IO])(implicit loggerFactory: Slf4jFactory[IO]) {
+class SNSAwsService(snsClient: SnsClientA, httpClient: HttpClientA)(implicit loggerFactory: Slf4jFactory[IO]) {
 
   private lazy val logger = loggerFactory.getLogger
 

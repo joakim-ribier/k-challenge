@@ -103,40 +103,18 @@ HTTP NEW USER SIGNUP ROUTES
 
 [![codecov](https://codecov.io/gh/joakim-ribier/komoot-challenge/branch/main/graph/badge.svg?token=0G7D8GY6HV)](https://codecov.io/gh/joakim-ribier/komoot-challenge)
 
-For this challenge, I only created some tests to show how I work. Usually, all code lines need to be tested. The tests are in `src/test/scala/io/komoot` package.
+The tests are in `src/test/scala/io/komoot` package.
+
+To show the tests execution, go to the [Action on Scala CI - here](https://github.com/joakim-ribier/komoot-challenge/actions) click on the last build -> "build 1m 29s" -> "Run Tests". 
 
 ```
 $ sbt:komoot-challenge> test
-[info] compiling 1 Scala source to /home/joakim/Sources/external/komoot-challenge/target/scala-2.13/classes ...
-[info] UserNotificationSpec:
-[info] UserNotificationSpec
-[info] - must serialize object (347 milliseconds)
-[info] NewUserSpec:
-[info] - must deserialize object (1 millisecond)
-[info] NewUserSpec
-[info] - must serialize object (347 milliseconds)
-[info] - must deserialize object (1 millisecond)
-[info] SnsMessageSpec:
-[info] SnsMessageSpec
-[info] - must deserialize object with 'new user' message (347 milliseconds)
-[info] - must deserialize object with 'subscribe url' message (17 milliseconds)
-[info] SignupNotifyServiceSpec:
-[info] SignupNotifyService
-[info]   when notify
-[info]   - must do nothing if user already exists (1 second, 368 milliseconds)
-[info]   - must push notification for new signup user (367 milliseconds)
-[info]   when build message
-[info]   - must build a simple welcome message if there is no recently signup users (1 millisecond)
-[info]   - must build welcome message if there is only one signup user (1 millisecond)
-[info]   - must build welcome message if there are two signup users (0 milliseconds)
-[info]   - must build welcome message with nb recently max users (0 milliseconds)
-[info]   - must build welcome message if there are more than two signup users (1 millisecond)
-[info] Run completed in 1 second, 979 milliseconds.
-[info] Total number of tests run: 13
-[info] Suites: completed 4, aborted 0
-[info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0
+...
+[info] Run completed in 5 seconds, 32 milliseconds.
+[info] Total number of tests run: 30
+[info] Suites: completed 10, aborted 0
+[info] Tests: succeeded 30, failed 0, canceled 0, ignored 0, pending 0
 [info] All tests passed.
-[success] Total time: 3 s, completed 30 oct. 2022 à 17:41:10
 ```
 
 ## Run
@@ -203,7 +181,7 @@ $ scp -i ~/.pem target/universal/komoot-challenge-0.1.0-SNAPSHOT.zip ec2-user@{i
 
 I decided to make it very simple, but for a more complex project, it is better to create a docker image and deploy it directly with terraform to automate the deployment.
 
-## Improve
+## Improvement
 
 Code:
 
