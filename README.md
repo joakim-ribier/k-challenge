@@ -69,7 +69,7 @@ I used [circe](https://circe.github.io/circe/) library to work with Json data ty
 
 To load configuration files, I used [pureconfig](https://github.com/pureconfig/pureconfig), there is no more simple way!
 
-The project is built with the first little integration of the Github workflows [Scala CI](https://github.com/joakim-ribier/komoot-challenge/actions) on the branch `#task/add-github-workflows-action`.
+The project is built with the integration of the Github workflows [Scala CI](https://github.com/joakim-ribier/komoot-challenge/actions).
 
 ## Documentation
 
@@ -207,7 +207,7 @@ I decided to make it very simple, but for a more complex project, it is better t
 
 Code:
 
-* Implement all missing tests and add coverage code on the project.
+* ~~Implement all missing tests and add coverage code on the project.~~
 
 * Update the project to use the `tagless final pattern` to remove at the maximum the all side effects. For a simple project like this, I think it is overkill to do that, the code review will be more simple for you!
 

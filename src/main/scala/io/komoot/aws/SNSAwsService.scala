@@ -7,15 +7,14 @@ import org.http4s.Uri.unsafeFromString
 import org.http4s.client.Client
 import org.typelevel.log4cats.slf4j.Slf4jFactory
 
-import software.amazon.awssdk.services.sns.SnsClient
 import software.amazon.awssdk.services.sns.model.SubscribeRequest
 
-class SNSAwsService(snsClient: SnsClient, httpClient: Client[IO])(implicit loggerFactory: Slf4jFactory[IO]) {
+class SNSAwsService(snsClient: SnsClientA, httpClient: Client[IO])(implicit loggerFactory: Slf4jFactory[IO]) {
 
   private lazy val logger = loggerFactory.getLogger
 
   def subscribe(topicArn: String, redirectionEndpoint: String): IO[Boolean] = {
-    val request = SubscribeRequest.builder()
+    val request: SubscribeRequest = SubscribeRequest.builder()
       .protocol("http")
       .endpoint(redirectionEndpoint)
       .returnSubscriptionArn(true)
@@ -24,7 +23,7 @@ class SNSAwsService(snsClient: SnsClient, httpClient: Client[IO])(implicit logge
 
     for {
       _ <- logger.info("Try to subscribe to SNS...")
-      response = snsClient.subscribe(request)
+      response <- snsClient.subscribe(request)
       result <- {
         if (response.sdkHttpResponse.isSuccessful) {
           logger.info("Subscription to SNS Ok.").as(true)

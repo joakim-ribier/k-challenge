@@ -31,4 +31,5 @@ trait EnvHelpers {
   loggerFactory.getLogger(*[LoggerName]).returns(logger)
   logger.debug(*[String]).returns(IO.unit)
   logger.info(*[String]).returns(IO.unit)
+  logger.error(*[String]).returns(IO.unit)
 }

@@ -3,7 +3,7 @@ package io.komoot
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import cats.effect.{IO, IOApp, Resource}
-import io.komoot.aws.SNSAwsService
+import io.komoot.aws.{SNSAwsService, SnsClientA}
 import io.komoot.config.ConfigLoader
 import io.komoot.models.cache.NewUserData
 import io.komoot.server.AppServer
@@ -13,9 +13,6 @@ import org.http4s.blaze.client.BlazeClientBuilder
 import org.typelevel.log4cats.slf4j.{Slf4jFactory, loggerFactoryforSync}
 
 import scalacache.caffeine.CaffeineCache
-import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
-import software.amazon.awssdk.regions.Region
-import software.amazon.awssdk.services.sns.SnsClient
 
 object Main extends IOApp.Simple {
 
@@ -31,11 +28,7 @@ object Main extends IOApp.Simple {
       httpClient <- BlazeClientBuilder[IO].resource
 
       // aws
-      awsCreds = AwsBasicCredentials.create(config.aws.accessKeyId, config.aws.secretAccessKey)
-      snsClient = SnsClient.builder().region(Region.of(config.komoot.region)).credentialsProvider(
-        StaticCredentialsProvider.create(awsCreds)
-      ).build()
-      snsAwsService = new SNSAwsService(snsClient, httpClient)
+      snsAwsService = new SNSAwsService(new SnsClientA(config), httpClient)
       _ <- Resource.eval(snsAwsService.subscribe(config.komoot.sns, config.snsEndpointToReceiveNotification))
 
       newUserCacheService <- Resource.eval(CaffeineCache[IO, String, NewUserData]).map(new NewUserCacheService(_))
