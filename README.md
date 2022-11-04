@@ -1,5 +1,7 @@
 # Komoot - Challenge 2022
 
+### http4s - cats - tagless final - Mockito
+
 ## Synopsis
 
 Http4s micro-service: to receive a message on a specific endpoint from `arn:sns` and transfer a new message to an external push notification service (Komoot API).
