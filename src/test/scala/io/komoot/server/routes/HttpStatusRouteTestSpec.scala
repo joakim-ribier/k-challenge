@@ -20,7 +20,7 @@ class HttpStatusRouteTestSpec extends AppHelpers with EnvHelpers {
       "return info on the status of the application" in {
         val request: Request[IO] = Request(GET, unsafeFromString("/api/status"))
 
-        val service = new HttpStatusRoute(null)
+        val service = new HttpStatusRoute[IO](null)
 
         val (status, maybeBody) = run(service, request)
 
@@ -33,7 +33,7 @@ class HttpStatusRouteTestSpec extends AppHelpers with EnvHelpers {
       "return the state of the current cache" in {
         val request: Request[IO] = Request(GET, unsafeFromString("/api/status/cache"))
 
-        val newUserCacheService = mock[NewUserCacheService]
+        val newUserCacheService = mock[NewUserCacheService[IO]]
         newUserCacheService.getCache().returns(IO.pure(NewUserData(List(marcus))))
 
         val service = new HttpStatusRoute(newUserCacheService)

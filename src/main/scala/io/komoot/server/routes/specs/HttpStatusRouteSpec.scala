@@ -1,9 +1,8 @@
 package io.komoot.server.routes.specs
 
-import cats.effect.IO
 import org.http4s.Response
 
-trait HttpStatusRouteSpec {
+trait HttpStatusRouteSpec[F[_]] {
 
   /*
     ____
@@ -36,7 +35,7 @@ trait HttpStatusRouteSpec {
     }
     ```
    */
-  def status(): IO[Response[IO]]
+  def status(): F[Response[F]]
 
   /*
     ____
@@ -82,5 +81,5 @@ trait HttpStatusRouteSpec {
     ]
     ```
    */
-  def cache(): IO[Response[IO]]
+  def cache(): F[Response[F]]
 }

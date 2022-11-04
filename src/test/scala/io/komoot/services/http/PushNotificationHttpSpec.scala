@@ -13,7 +13,7 @@ class PushNotificationHttpSpec extends AppHelpers with EnvHelpers {
     "push" must {
 
       "posts notification to an specific endpoint" in {
-        val httpClientA = mock[HttpClientA]
+        val httpClientA = mock[HttpClientA[IO]]
         httpClientA.successful(*[Request[IO]]).returns(true.pure[IO])
 
         val service =
@@ -25,7 +25,7 @@ class PushNotificationHttpSpec extends AppHelpers with EnvHelpers {
       }
 
       "return 'false' is an error occurred!" in {
-        val httpClientA = mock[HttpClientA]
+        val httpClientA = mock[HttpClientA[IO]]
         httpClientA.successful(*[Request[IO]]).returns(IO.raiseError(new Throwable("error test")))
 
         val service =

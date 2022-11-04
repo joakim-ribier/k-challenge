@@ -150,7 +150,7 @@ Config(joakim.ribier@gmail.com,http://35.181.62.254:9700/api/aws-sns/new-user-si
 [io-compute-blocker-5] INFO  i.k.a.SNSAwsService - Subscription to SNS Ok.
 ```
 
-And curl it:
+And curl it or directly with [Http Client (Go)](https://github.com/joakim-ribier/gttp):
 ```
 $curl http://localhost:9700/api/status | jq
 ```
@@ -187,7 +187,7 @@ Code:
 
 * ~~Implement all missing tests and add coverage code on the project.~~
 
-* Update the project to use the `tagless final pattern` to remove at the maximum the all side effects. For a simple project like this, I think it is overkill to do that, the code review will be more simple for you!
+* ~~Update the project to use the `tagless final pattern` to remove at the maximum the all side effects. For a simple project like this, I think it is overkill to do that, the code review will be more simple for you!~~
 
 Infra:
 

@@ -19,7 +19,7 @@ class SignupNotifyServiceSpec extends AppHelpers with EnvHelpers {
     "notify" must {
 
       "do nothing if user already exists" in {
-        val newUserCacheService = mock[NewUserCacheService]
+        val newUserCacheService = mock[NewUserCacheService[IO]]
         newUserCacheService.getCache().returns(IO.pure(NewUserData(List(marcus))))
 
         val service = new SignupNotifyService(config, newUserCacheService, null)
@@ -32,11 +32,11 @@ class SignupNotifyServiceSpec extends AppHelpers with EnvHelpers {
       }
 
       "push notification for new signup user" in {
-        val newUserCacheService = mock[NewUserCacheService]
+        val newUserCacheService = mock[NewUserCacheService[IO]]
         newUserCacheService.getCache().returns(IO.pure(NewUserData(List(lydia))))
         newUserCacheService.update(*[NewUser], *[Boolean], *[LocalDateTime]).returns(IO.unit)
 
-        val pushNotificationHttpService = mock[PushNotificationHttpService]
+        val pushNotificationHttpService = mock[PushNotificationHttpService[IO]]
         pushNotificationHttpService.push(*[UserNotification]).returns(true.pure[IO])
 
         val service = new SignupNotifyService(
@@ -61,7 +61,7 @@ class SignupNotifyServiceSpec extends AppHelpers with EnvHelpers {
       }
 
       "mocks push notification if the configuration is not enabled" in {
-        val newUserCacheService = mock[NewUserCacheService]
+        val newUserCacheService = mock[NewUserCacheService[IO]]
         newUserCacheService.getCache().returns(IO.pure(NewUserData(List(lydia))))
         newUserCacheService.update(*[NewUser], *[Boolean], *[LocalDateTime]).returns(IO.unit)
 

@@ -13,12 +13,12 @@ final case class Config(
   komoot: KomootConfig,
   http: HttpConfig)
 
-class ConfigLoader {
+class ConfigLoader[F[_]: Sync] {
 
-  def load(): Resource[IO, Config] = {
+  def load(): Resource[F, Config] = {
     import pureconfig.generic.auto._
     import pureconfig.module.catseffect.syntax._
 
-    Resource.eval(ConfigSource.fromConfig(ConfigFactory.load()).loadF[IO, Config]())
+    Resource.eval(ConfigSource.fromConfig(ConfigFactory.load()).loadF[F, Config]())
   }
 }

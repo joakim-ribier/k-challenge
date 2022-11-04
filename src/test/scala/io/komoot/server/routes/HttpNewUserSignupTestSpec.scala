@@ -26,7 +26,7 @@ class HttpNewUserSignupTestSpec extends AppHelpers with EnvHelpers {
         val request: Request[IO] =
           Request(POST, unsafeFromString("/api/new-user-signup")).withEntity(marcus.newUser.asJson)
 
-        val signupNotifyService = mock[SignupNotifyService]
+        val signupNotifyService = mock[SignupNotifyService[IO]]
         signupNotifyService.notify(*[NewUser], *[LocalDateTime]).returns(().pure[IO])
 
         val service = new HttpNewUserSignupRoute(null, signupNotifyService)
@@ -47,7 +47,7 @@ class HttpNewUserSignupTestSpec extends AppHelpers with EnvHelpers {
             Json.obj("Message" -> Json.fromString(marcus.newUser.asJson.noSpaces))
           )
 
-        val signupNotifyService = mock[SignupNotifyService]
+        val signupNotifyService = mock[SignupNotifyService[IO]]
         signupNotifyService.notify(*[NewUser], *[LocalDateTime]).returns(().pure[IO])
 
         val service = new HttpNewUserSignupRoute(null, signupNotifyService)
@@ -68,7 +68,7 @@ class HttpNewUserSignupTestSpec extends AppHelpers with EnvHelpers {
             )
           )
 
-        val snsAwsService = mock[SNSAwsService]
+        val snsAwsService = mock[SNSAwsService[IO]]
         snsAwsService.confirmSubscribeURL(*[String]).returns(true.pure[IO])
 
         val service = new HttpNewUserSignupRoute(snsAwsService, null)
@@ -86,7 +86,7 @@ class HttpNewUserSignupTestSpec extends AppHelpers with EnvHelpers {
             Json.obj("Message" -> Json.fromString("bad format message"))
           )
 
-        val service = new HttpNewUserSignupRoute(null, null)
+        val service = new HttpNewUserSignupRoute[IO](null, null)
 
         val (status, _) = run(service, request)
 

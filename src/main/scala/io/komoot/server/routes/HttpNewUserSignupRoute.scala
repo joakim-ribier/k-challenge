@@ -2,7 +2,9 @@ package io.komoot.server.routes
 
 import java.time.LocalDateTime
 
-import cats.effect.IO
+import cats.effect.kernel.Concurrent
+import cats.implicits.{toFlatMapOps, toFunctorOps}
+import cats.syntax.flatMap._
 import io.komoot.aws.SNSAwsService
 import io.komoot.models.NewUser
 import io.komoot.models.aws.SnsMessage
@@ -13,23 +15,23 @@ import org.http4s.dsl.Http4sDsl
 import org.http4s.{HttpRoutes, Request, Response}
 import org.typelevel.log4cats.slf4j.Slf4jFactory
 
-class HttpNewUserSignupRoute(
-  snsAwsService: SNSAwsService,
-  signupNotifyService: SignupNotifyService
-)(implicit loggerFactory: Slf4jFactory[IO])
-    extends Http4sDsl[IO] with HttpRoute with HttpNewUserSignupRouteSpec {
+class HttpNewUserSignupRoute[F[_]: Concurrent](
+  snsAwsService: SNSAwsService[F],
+  signupNotifyService: SignupNotifyService[F]
+)(implicit loggerFactory: Slf4jFactory[F])
+    extends Http4sDsl[F] with HttpRoute[F] with HttpNewUserSignupRouteSpec[F] {
 
   private lazy val logger = loggerFactory.getLogger
 
-  implicit val messageEntityDecoder = jsonOf[IO, SnsMessage]
-  implicit val newUserEntityDecoder = jsonOf[IO, NewUser]
+  implicit val messageEntityDecoder = jsonOf[F, SnsMessage]
+  implicit val newUserEntityDecoder = jsonOf[F, NewUser]
 
-  override def routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  override def routes: HttpRoutes[F] = HttpRoutes.of[F] {
     case req @ POST -> Root / "api" / "new-user-signup" => notifyNewUserSignup(req)
     case req @ POST -> Root / "api" / "aws-sns" / "new-user-signup" => notifyNewUserSignupFromAwsSNS(req)
   }
 
-  override def notifyNewUserSignup(req: Request[IO]): IO[Response[IO]] = {
+  override def notifyNewUserSignup(req: Request[F]): F[Response[F]] = {
     for {
       _ <- logger.debug(s"call ~/new-user-signup endpoint...")
       newUser <- req.as[NewUser]
@@ -38,9 +40,9 @@ class HttpNewUserSignupRoute(
     } yield response
   }
 
-  override def notifyNewUserSignupFromAwsSNS(req: Request[IO]): IO[Response[IO]] = {
+  override def notifyNewUserSignupFromAwsSNS(req: Request[F]): F[Response[F]] = {
 
-    def process(snsMessage: SnsMessage): IO[Unit] = {
+    def process(snsMessage: SnsMessage): F[Unit] = {
       // The first message after subscribing to the ARN, contains the subscribeURL to confirm.
       snsMessage match {
         case SnsMessage(Some(newUser), _) => signupNotifyService.notify(newUser, LocalDateTime.now())
