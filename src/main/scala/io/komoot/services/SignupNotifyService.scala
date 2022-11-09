@@ -3,7 +3,7 @@ package io.komoot.services
 import java.time.LocalDateTime
 
 import cats.effect.kernel.Concurrent
-import cats.implicits.{catsSyntaxApplicativeId, toFlatMapOps, toFunctorOps}
+import cats.implicits.{toFlatMapOps, toFunctorOps}
 import io.komoot.config.Config
 import io.komoot.models.cache.NewUserData
 import io.komoot.models.{NewUser, UserNotification}
@@ -28,7 +28,9 @@ class SignupNotifyService[F[_]: Concurrent](
         notifySuccessful <- {
           if (config.komoot.enable) { // for local test to avoid spam komoot API
             pushNotificationHttpService.push(userNotification)
-          } else true.pure[F]
+          } else {
+            logger.info(s"The push notification is mocked.").as(true)
+          }
         }
         _ <- {
           (if (notifySuccessful) {

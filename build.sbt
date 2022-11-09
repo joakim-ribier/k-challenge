@@ -53,7 +53,7 @@ docsCleanBefore := true
 docsMap := Map(file("src/main/scala/io/komoot/server/routes/specs") -> file("resources/specs"))
 
 // coverage
-ThisBuild / coverageEnabled := true
+ThisBuild / coverageEnabled := false
 ThisBuild / coverageExcludedPackages := "<empty>;Reverse.*;.*BuildInfo.*;.*Main.*;.*AppServer.*;.*SnsClientA.*;.*HttpClientA.*"
 ThisBuild / coverageMinimumStmtTotal := 95
 ThisBuild / coverageFailOnMinimum := true
