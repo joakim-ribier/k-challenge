@@ -103,11 +103,11 @@ HTTP NEW USER SIGNUP ROUTES
 
 ## Test
 
-[![codecov](https://codecov.io/gh/joakim-ribier/komoot-challenge/branch/main/graph/badge.svg?token=0G7D8GY6HV)](https://codecov.io/gh/joakim-ribier/komoot-challenge)
+[![codecov](https://codecov.io/gh/joakim-ribier/k-challenge/branch/main/graph/badge.svg?token=0G7D8GY6HV)](https://codecov.io/gh/joakim-ribier/k-challenge)
 
 The tests are in `src/test/scala/io/komoot` package.
 
-To show the tests execution, go to the [Action on Scala CI - here](https://github.com/joakim-ribier/komoot-challenge/actions) click on the last build -> "build 1m 29s" -> "Run Tests". 
+To show the tests execution, go to the [Action on Scala CI - here](https://github.com/joakim-ribier/k-challenge/actions) click on the last build -> "build 1m 29s" -> "Run Tests". 
 
 ```
 $ sbt:komoot-challenge> test
